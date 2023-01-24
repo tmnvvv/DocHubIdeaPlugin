@@ -1,108 +1,30 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>org.dochub.idea.arch</id>
-    <name>DocHub Architecture as code</name>
-    <vendor email="r.piontik@mail.ru" url="https://dochub.info">DocHub</vendor>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>com.example.DocHubIdeaPlugin</id>
 
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>DocHubIdeaPlugin</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-        <p>
-            The plugin is part of the DocHub project. This project allows you to describe the architecture
-            of systems in code. You can learn more about the project in the
-            <a href="https://github.com/RabotaRu/DocHub/">github</a> repository or
-                on website <a href="https://dochub.info">dochub.info</a>.
-        </p>
-        <p>
-            This release includes:
-            <ul>
-                <li>DocHub core: v2.2.4;</li>
-                <li>Suggests for the structure of architecture manifests (yaml);</li>
-                <li>Suggests for the values of manifest fields;</li>
-                <li>Fast navigation through manifests;</li>
-                <li>Built-in architecture rendering;</li>
-                <li>JSONata file support;</li>
-                <li>Mapping architecture on the code;</li>
-                <li>Added the datasets and the table documents support;</li>
-                <li>Refactored subsystem of metamodel validation;</li>
-                <li>Document templates;</li>
-                <li>Support Eclipse ELK render core;</li>
-                <li>(new) Stabilized current functionality.</li>
-            </ul>
-        </p>
-    ]]></description>
+    Enter short description for your plugin here.<br>
+    <em>most HTML tags may be used</em>
+  ]]></description>
 
-    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
-         on how to target different products -->
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
-    <depends>org.jetbrains.plugins.yaml</depends>
-    <depends optional="true" config-file="java.xml">com.intellij.java</depends>
 
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService
-                serviceImplementation="org.dochub.idea.arch.settings.SettingsState"/>
 
-        <applicationConfigurable
-                parentId="tools"
-                instance="org.dochub.idea.arch.settings.SettingConfigurable"
-                id="org.dochub.idea.arch.settings.SettingConfigurable"
-                displayName="DocHub: Render settings"/>
-
-        <completion.contributor
-                language="yaml"
-                implementationClass="org.dochub.idea.arch.completions.YamlCompletion"
-        />
-        <psi.referenceContributor
-                language="yaml"
-                implementation="org.dochub.idea.arch.references.ReferenceContributor"
-        />
-        <annotator
-                language="yaml"
-                implementationClass="org.dochub.idea.arch.quickfix.FixAnnotator"
-        />
-        <localInspection
-                implementationClass="org.dochub.idea.arch.inspections.DocHubInspection"
-                level="WARNING"
-                enabledByDefault="true"
-                runForWholeFile="true"
-                language="yaml"
-                shortName="DocHubInspector"
-                displayName="DocHub Inspector"
-                groupName="DocHub"
-        />
-        <toolWindow factoryClass="org.dochub.idea.arch.tools.DocHubToolWindowFactory"
-                    icon="AllIcons.General.InspectionsEye"
-                    anchor="right"
-                    id="DocHub"
-        />
-        <fileType
-                name="JSONata"
-                implementationClass="org.dochub.idea.arch.jsonata.JSONataFileType"
-                fieldName="INSTANCE"
-                language="JSONata"
-                extensions="jsonata"
-        />
-        <lang.parserDefinition
-                language="JSONata"
-                implementationClass="org.dochub.idea.arch.jsonata.JSONataParserDefinition"
-        />
-        <lang.syntaxHighlighterFactory
-                language="JSONata"
-                implementationClass="org.dochub.idea.arch.jsonata.JSONataSyntaxHighlighterFactory"
-        />
-        <codeInsight.lineMarkerProvider
-                language="yaml"
-                implementationClass="org.dochub.idea.arch.markline.LineMarkerYaml"
-        />
-        <fileBasedIndex implementation="org.dochub.idea.arch.indexing.DocHubIndex"/>
-        <!--
-        <editorTabTitleProvider
-                implementation="org.dochub.idea.arch.views.PreviewEditorTabTitleProvider"
-        />
-                key="inspection.display-name"
-                groupKey="inspection.group"
-
-        -->
     </extensions>
-
-    <actions>
-        <!-- Add your actions here -->
-    </actions>
 </idea-plugin>
