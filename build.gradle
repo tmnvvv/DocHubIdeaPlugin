@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.intellij' version '1.11.0' //1.8.0?
+    id 'org.jetbrains.intellij' version '1.8.0' //1.8.0?
     id 'java'
 }
 
@@ -38,12 +38,16 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     type = 'IC'
-    version = '2022.3.1'
+    version = '2022.2.1'
     plugins = ['yaml', 'com.intellij.java']
 }
 
 buildSearchableOptions {
     enabled = false
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
 
 patchPluginXml {
@@ -70,8 +74,8 @@ patchPluginXml {
           <ul>  
       </em>
       """
-    sinceBuild = "223"
-    untilBuild = "223.*"
+    sinceBuild = "212"
+    untilBuild = "222.*"
 }
 test {
     useJUnitPlatform()
