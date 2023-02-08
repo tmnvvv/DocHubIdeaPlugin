@@ -18,24 +18,25 @@ import org.jetbrains.yaml.psi.YAMLMapping
 import java.util.*
 
 open class BaseStructureQuickFix : BaseQuickFix {
-    protected val requiredStructure: Array<String>?
-        protected get() = null
-    var needToAppendProps: List<String?>? = null
 
-    constructor(element: PsiElement?, needToAppendProps: List<String?>?) : super(element) {
+    protected val requiredStructure: Array<String> = arrayOf()
+
+    var needToAppendProps: List<String> = listOf()
+
+    constructor(element: PsiElement, needToAppendProps: List<String>) : super(element) {
         this.needToAppendProps = needToAppendProps
     }
 
-    constructor() : super()
+    constructor(): super(null)
 
-    override fun getFixPattern(element: PsiElement?): ElementPattern<out PsiElement?>? {
+    override fun getFixPattern(element: PsiElement): ElementPattern<out PsiElement>? {
         return null
     }
 
     override fun makeFix(element: PsiElement, holder: AnnotationHolder) {
         val componentID = element.parent
         var props = componentID.children
-        var result: MutableList<String?>? = mutableListOf()
+        var result: MutableList<String>? = mutableListOf()
         val foundProps: MutableList<String> = mutableListOf()
         if (props.size == 1) {
             props = props[0].children
@@ -44,7 +45,7 @@ open class BaseStructureQuickFix : BaseQuickFix {
                     foundProps.add(getText(prop.key))
                 }
             }
-            for (require in requiredStructure!!) {
+            for (require in requiredStructure) {
                 if (foundProps.indexOf(require) < 0) {
                     if (result != null) {
                         result.add(require)

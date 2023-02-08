@@ -10,7 +10,7 @@ import org.jetbrains.yaml.psi.YAMLMapping
 
 class AspectRootQuickFix : BaseStructureQuickFix() {
 
-    override fun getFixPattern(element: PsiElement?): ElementPattern<out PsiElement> {
+    override fun getFixPattern(element: PsiElement): ElementPattern<out PsiElement> {
         return PlatformPatterns.psiElement()
             .beforeLeaf(":")
             .withSuperParent(2, psi(YAMLMapping::class.java))

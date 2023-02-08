@@ -11,20 +11,13 @@ import com.intellij.patterns.PsiElementPattern
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
-import com.intellij.util.IncorrectOperationException
 
-abstract class BaseQuickFix : BaseIntentionAction {
-    protected var element: PsiElement?
-    abstract fun getFixPattern(element: PsiElement?): ElementPattern<out PsiElement?>?
+abstract class BaseQuickFix(protected var element: PsiElement?) : BaseIntentionAction() {
+
+    abstract fun getFixPattern(element: PsiElement): ElementPattern<out PsiElement>?
+
     abstract fun makeFix(element: PsiElement, holder: AnnotationHolder)
 
-    constructor(element: PsiElement?) {
-        this.element = element
-    }
-
-    constructor() {
-        element = null
-    }
 
     override fun getFamilyName(): @IntentionFamilyName String {
         return String()
@@ -34,16 +27,16 @@ abstract class BaseQuickFix : BaseIntentionAction {
         return false
     }
 
-    @Throws(IncorrectOperationException::class)
+
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
     }
 
     companion object {
-        fun <T : PsiElement?> psi(aClass: Class<T>?): PsiElementPattern.Capture<T> {
+        fun <T : PsiElement> psi(aClass: Class<T>): PsiElementPattern.Capture<T> {
             return PlatformPatterns.psiElement(aClass)
         }
 
-        fun psi(type: IElementType?): PsiElementPattern.Capture<PsiElement> {
+        fun psi(type: IElementType): PsiElementPattern.Capture<PsiElement> {
             return PlatformPatterns.psiElement(type)
         }
     }

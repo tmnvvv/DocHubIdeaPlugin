@@ -22,7 +22,7 @@ class FixAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         for (fix in fixes) {
             val pattern: ElementPattern<*>? = fix.getFixPattern(element)
-            if (pattern!!.accepts(element)) {
+            if (pattern != null && pattern.accepts(element)) {
                 fix.makeFix(element, holder)
             }
         }
