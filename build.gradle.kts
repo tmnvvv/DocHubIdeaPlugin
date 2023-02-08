@@ -1,5 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.changelog.Changelog
 
 val javaVersion = JavaVersion.VERSION_17
 
@@ -47,6 +47,13 @@ intellij {
     plugins.set(platformPlugins.split(',').map(String::trim).filter(String::isNotEmpty))
 }
 
+java {
+    val javaSrcDir = "src/main/gen"
+    val mainJavaSourceSet: SourceDirectorySet = sourceSets.getByName("main").java
+    mainJavaSourceSet.srcDir(javaSrcDir)
+}
+
+
 tasks {
 
     withType<JavaCompile> {
@@ -63,20 +70,17 @@ tasks {
     }
 
     patchPluginXml {
-
         sinceBuild.set(pluginSinceBuild)
         untilBuild.set(pluginUntilBuild)
 
-        pluginDescription.set(
-            file("description.md").readText().lines().run {
-                val start = "<!-- Plugin description -->"
-                val end = "<!-- Plugin description end -->"
-
-                if (!containsAll(listOf(start, end))) {
-                    throw GradleException("Plugin description section not found in description.md:\n$start ... $end")
-                }
-                subList(indexOf(start) + 1, indexOf(end))
-            }.joinToString("\n").let { markdownToHTML(it) }
-        )
+        changeNotes.set(provider {
+            with(changelog) {
+                renderItem(
+                    getOrNull(project.version as String)
+                        ?: runCatching { getLatest() }.getOrElse { getUnreleased() },
+                    Changelog.OutputType.HTML,
+                )
+            }
+        })
     }
 }

@@ -1,0 +1,16 @@
+package org.dochub.idea.arch.tools
+
+const val ROOT_FILE = "dochub.yaml"
+const val ROOT_SOURCE = "\$root"
+const val ROOT_SOURCE_PATH = "plugin:/idea/source/"
+const val ROOT_SOURCE_URI = "plugin:/idea/source/\$root"
+const val PLANTUML_RENDER_SVG_URI = "plugin:/idea/plantuml/svg"
+const val NAVI_GOTO_SOURCE_URI = "plugin:/idea/goto"
+const val WIZARD_INIT_URI = "plugin:/idea/initproject"
+const val ACTION_PULL_URI = "plugin:/idea/gateway/pull"
+const val ACTION_SOURCE_CHANGED = "source/changed"
+const val ACTION_DOWNLOAD_URI = "plugin:/idea/gateway/download"
+const val DEVTOOL_SHOW_URI = "plugin:/idea/debugger/show"
+const val HTML_RELOAD_URI = "plugin:/idea/reload"
+const val ENTITIES_APPLY_SCHEMA = "plugin:/idea/entities/applyschema"
+const val CLIPBOARD_COPY = "plugin:/idea/clipboard/copy"
