@@ -27,7 +27,7 @@ class SettingConfigurable : Configurable {
         val settingsState: SettingsState = SettingsState.instance
         var modified: Boolean = !(settingComponent?.renderServerText == settingsState.serverRendering)
         modified = modified or !(settingComponent?.renderModeText == settingsState.renderMode)
-        modified = modified or (settingComponent?.isExternalRenderBool !== settingsState.renderIsExternal)
+        modified = modified or (settingComponent?.isExternalRenderBool != settingsState.renderIsExternal)
         return modified
     }
 

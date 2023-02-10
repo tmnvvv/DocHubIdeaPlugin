@@ -10,7 +10,7 @@ fun getText(element: PsiElement?): String {
 
 fun getYamlDocumentByPsiElement(element: PsiElement): PsiElement {
     var document = element
-    while (document != null) {
+    while (true) {
         if (ObjectUtils.tryCast(document, YAMLDocument::class.java) != null) break
         document = document.parent
     }

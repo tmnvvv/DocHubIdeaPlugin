@@ -115,10 +115,10 @@ class Navigation(private val project: Project) {
             var source = jsonSource.asText()
             if (source == "null") {
                 val cache: MutableMap<String, SectionData> = getProjectCache(project)
-                val section = entityToSection(entity) ?: return
-                val components: SectionData = (if (cache == null) null else cache[section]) ?: return
+                val section = entityToSection(entity)
+                val components: SectionData = (cache[section]) ?: return
                 val files = components.ids.get(id) as  List<VirtualFile>
-                if (files != null && files.size > 0) source = files[0].path
+                if (files.size > 0) source = files[0].path
             }
             go(source, entity, id)
         } else if (jsonRange != null && jsonSource != null) {

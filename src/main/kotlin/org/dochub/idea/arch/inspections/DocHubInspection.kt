@@ -41,7 +41,7 @@ class DocHubInspection : LocalInspectionTool() {
                 )
             )
         }
-        return problems.toArray<ProblemDescriptor> { ProblemDescriptor.EMPTY_ARRAY }
+        return problems.toArray { ProblemDescriptor.EMPTY_ARRAY }
     }
 
     private fun noProblemsFound(): Array<ProblemDescriptor> {

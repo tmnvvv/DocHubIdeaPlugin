@@ -39,8 +39,7 @@ abstract class FilteredCustomProvider : CustomProvider() {
                         parameters.position,
                         YAMLKeyValue::class.java
                     )
-                    var containerToScan: PsiElement? = null
-                    containerToScan = if (parent == null) {
+                    var containerToScan: PsiElement? = if (parent == null) {
                         // Это корень файла
                         parameters.position.parent.context
                     } else {

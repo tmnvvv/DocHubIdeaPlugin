@@ -56,19 +56,15 @@ open class RefBaseID : BaseReferencesProvider() {
         context: ProcessingContext
     ): Array<PsiReference> {
         val project = element.manager.project
-        var id: String? = null
-        id =
-            if (element is YAMLKeyValue) getText(element.key) else if (element is YAMLPlainTextImpl) getText(element) else return PsiReference.EMPTY_ARRAY
+        var id: String? = if (element is YAMLKeyValue) getText(element.key) else if (element is YAMLPlainTextImpl) getText(element) else return PsiReference.EMPTY_ARRAY
         val cache: Map<String, SectionData> = getProjectCache(project)
-        val components: SectionData? = if (cache == null) null else cache[keyword]
+        val components: SectionData? = cache[keyword]
         val refs: MutableList<PsiReference> = ArrayList()
         if (id != null && components != null) {
             val files = components.ids.get(id) as ArrayList<VirtualFile>
-            if (files != null) {
-                for (i in files.indices) {
-                    val targetFile = PsiManager.getInstance(project).findFile(files[i])
-                    targetFile?.let { FileSourceReference(element, id, it) }?.let { refs.add(it) }
-                }
+            for (i in files.indices) {
+                val targetFile = PsiManager.getInstance(project).findFile(files[i])
+                targetFile?.let { FileSourceReference(element, id, it) }?.let { refs.add(it) }
             }
         }
         var result = PsiReference.EMPTY_ARRAY

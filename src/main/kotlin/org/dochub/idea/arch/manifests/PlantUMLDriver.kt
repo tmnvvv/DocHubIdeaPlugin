@@ -13,7 +13,7 @@ import java.nio.charset.Charset
 // https://www.eclipse.org/forums/index.php/t/129584/
 
 
-object PlantUMLDriver {
+class PlantUMLDriver {
 
     fun init() {
         System.setProperty(
@@ -22,18 +22,19 @@ object PlantUMLDriver {
         )
         LayoutMetaDataService.getInstance().registerLayoutMetaDataProviders(LayeredOptions())
     }
-
-    fun makeSVG(source: String): String? {
-        var result: String? = null
-        val reader = SourceStringReader(source)
-        val os = ByteArrayOutputStream()
-        try {
-            reader.outputImage(os, FileFormatOption(FileFormat.SVG))
-            os.close()
-            result = String(os.toByteArray(), Charset.forName("UTF-8"))
-        } catch (e: IOException) {
-            e.printStackTrace()
+    companion object {
+        fun makeSVG(source: String): String? {
+            var result: String? = null
+            val reader = SourceStringReader(source)
+            val os = ByteArrayOutputStream()
+            try {
+                reader.outputImage(os, FileFormatOption(FileFormat.SVG))
+                os.close()
+                result = String(os.toByteArray(), Charset.forName("UTF-8"))
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            return result
         }
-        return result
     }
 }

@@ -16,8 +16,8 @@ import org.dochub.idea.arch.utils.scanYamlPsiTreeToLocation
 
 open class LocationSuggest : BaseSuggest() {
     private var cacheSectionKey: Key<CachedValue<List<String>>> = Key.create(section + "-loc")
-    protected open val section: String
-        protected get() = "undefined"
+    open val section: String
+        get() = "undefined"
 
 
     override fun appendToCompletion(completion: CompletionContributor) {
@@ -34,7 +34,7 @@ open class LocationSuggest : BaseSuggest() {
                     val project = parameters.position.project
                     val document: PsiElement = getYamlDocumentByPsiElement(psiPosition)
                     val cacheManager = CachedValuesManager.getManager(project)
-                    val locations = CachedValuesManager.getCachedValue(
+                    val locations = cacheManager.getCachedValue(
                         parameters.originalFile,
                         cacheSectionKey,
                         CachedValueProvider {
@@ -44,12 +44,13 @@ open class LocationSuggest : BaseSuggest() {
                             if (section != null) {
                                 for (i in 0 until section.locations.size) suggest.add(section.locations.get(i))
                             }
-                            CachedValueProvider.Result.create<List<String>>(
+                            CachedValueProvider.Result.create(
                                 suggest,
                                 PsiModificationTracker.MODIFICATION_COUNT,
                                 ProjectRootManager.getInstance(project)
                             )
-                        }
+                        },
+                        true
                     )
                     for (location in locations) {
                         resultSet.addElement(LookupElementBuilder.create(location))

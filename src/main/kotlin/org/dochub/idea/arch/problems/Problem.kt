@@ -21,11 +21,9 @@ class Problem(
             val columnComparison = Integer.compare(column, other.column)
             if (columnComparison == 0) {
                 val severityComparison: Int = -problemLevel.compareTo(other.problemLevel)
-                if (other != null) {
-                    return if (severityComparison == 0) {
-                        compare(message, other.message)
-                    } else severityComparison
-                }
+                return if (severityComparison == 0) {
+                    compare(message, other.message)
+                } else severityComparison
             }
             return columnComparison
         }

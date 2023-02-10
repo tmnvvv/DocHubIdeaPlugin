@@ -10,20 +10,31 @@ class DocHubIndexData : HashMap<String, DocHubIndexData.Section> {
     inner class Section {
         var locations: MutableList<String> = mutableListOf()
         var ids: MutableList<String> = mutableListOf()
-        var imports = ArrayList<String>()
+        var imports = mutableListOf<String>()
         val isEmpty: Boolean
             get() = locations.size + ids.size + imports.size == 0
 
-        override fun equals(o: Any?): Boolean {
-            if (this === o) return true
-            if (o == null || javaClass != o.javaClass) return false
-            val section = o as Section
-            return locations == section.locations && ids == section.ids && imports == section.imports
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Section
+
+            if (locations != other.locations) return false
+            if (ids != other.ids) return false
+            if (imports != other.imports) return false
+
+            return true
         }
 
         override fun hashCode(): Int {
-            return Objects.hash(locations, ids, imports)
+            var result = locations.hashCode()
+            result = 31 * result + ids.hashCode()
+            result = 31 * result + imports.hashCode()
+            return result
         }
+
+
     }
 
     fun stringify(out: DataOutput) {
@@ -93,16 +104,16 @@ class DocHubIndexData : HashMap<String, DocHubIndexData.Section> {
     }
 
     fun makeCacheDataImports(yaml: Map<String, Any>) {
-        val result = yaml["imports"] as ArrayList<String>
+        val result = yaml["imports"] as MutableList<String>
         if (result != null && result.size > 0) {
-            val section: Section = Section()
+            val section = Section()
             section.imports = result
             this["imports"] = section
         }
     }
 
     fun makeCacheDataSection(yaml: Map<String, Any>, section: String) {
-        val secData: Section = Section()
+        val secData = Section()
         try {
             val keys = yaml[section] as Map<String, Any>?
             if (keys != null) {
@@ -112,7 +123,7 @@ class DocHubIndexData : HashMap<String, DocHubIndexData.Section> {
                     if (`object` is Map<*, *>) {
                         val location = `object`["location"]
                         if (location is String) {
-                            if (location != null) secData.locations.add(location as String)
+                            secData.locations.add(location as String)
                         }
                     }
                 }

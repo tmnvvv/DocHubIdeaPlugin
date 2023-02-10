@@ -27,7 +27,10 @@ dependencies {
      * Внешние зависимости
      */
     implementation("com.ibm.jsonata4java:JSONata4Java:$JSONataVersion")
-    implementation(files("libs/elk-full.jar", "libs/plantuml.jar"))
+    implementation(files("libs/elk-full.jar"))
+    implementation(files("libs/plantuml.jar"))
+    implementation("com.google.code.gson:gson:2.10.1")
+
 
     /**
      * Тестовые зависимости
@@ -51,6 +54,10 @@ java {
     val javaSrcDir = "src/main/gen"
     val mainJavaSourceSet: SourceDirectorySet = sourceSets.getByName("main").java
     mainJavaSourceSet.srcDir(javaSrcDir)
+}
+
+tasks.jar {
+    manifest.attributes["PLANTUML_LIMIT_SIZE"] = "24384"
 }
 
 

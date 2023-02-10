@@ -11,7 +11,7 @@ import org.jetbrains.yaml.psi.YAMLMapping
 class ContextID : IDSuggestContexts() {
 
     override val pattern: ElementPattern<out PsiElement?>
-        protected get() = PlatformPatterns.or(
+        get() = PlatformPatterns.or(
             PlatformPatterns.psiElement()
                 .withSuperParent(2, psi(YAMLMapping::class.java))
                 .withSuperParent(

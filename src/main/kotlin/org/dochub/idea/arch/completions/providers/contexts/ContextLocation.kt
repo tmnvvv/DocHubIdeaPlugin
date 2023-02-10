@@ -10,7 +10,7 @@ import org.jetbrains.yaml.psi.YAMLKeyValue
 class ContextLocation : LocationSuggestContexts() {
 
     override val pattern: ElementPattern<out PsiElement?>
-        protected get() = PlatformPatterns.or(
+        get() = PlatformPatterns.or(
             PlatformPatterns.psiElement()
                 .withSuperParent(
                     2,

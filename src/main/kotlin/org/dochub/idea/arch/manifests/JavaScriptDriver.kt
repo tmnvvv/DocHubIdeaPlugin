@@ -21,7 +21,7 @@ class JavaScriptDriver {
         engine.eval(jsonata)
 
         // read and JSON.parse the input data
-        var sample: ByteArray? = ByteArray(0)
+        var sample: ByteArray?
         try {
             sample = Files.readAllBytes(Paths.get("sample.json"))
             engine.put("adaptor", CallbackLoad())

@@ -10,8 +10,8 @@ import org.jetbrains.yaml.psi.YAMLSequenceItem
 
 class ContextComponents : IDSuggestComponents() {
 
-    protected override val pattern: ElementPattern<out PsiElement?>
-        protected get() = PlatformPatterns.psiElement()
+    override val pattern: ElementPattern<out PsiElement?>
+        get() = PlatformPatterns.psiElement()
             .withSuperParent(2, psi(YAMLSequenceItem::class.java))
             .withSuperParent(
                 4,

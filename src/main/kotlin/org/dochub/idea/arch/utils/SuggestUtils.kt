@@ -28,7 +28,7 @@ fun scanDirByContext(basePath: String, context: String, extensions: Array<String
                 if (f.isDirectory) {
                     result.add("$suggest/")
                 } else for (ext in extensions) {
-                    if (f.name.endsWith(ext!!)) {
+                    if (f.name.endsWith(ext)) {
                         result.add(suggest)
                     }
                 }
@@ -93,41 +93,39 @@ fun scanYamlPsiTreeToID(document: PsiElement, section: String): MutableList<Stri
 fun scanYamlPsiTreeToLocation(element: PsiElement, section: String): MutableList<String> {
     var document = element
     val result: MutableList<String> = ArrayList()
-    while (document != null) {
+    while (true) {
         if (ObjectUtils.tryCast(document, YAMLDocument::class.java) != null) break
         document = document.parent
     }
-    if (document != null) {
-        val yamlSections = document.firstChild.children
-        // Обход корневых секций
-        for (yamlSection in yamlSections) {
-            val yamlKey = ObjectUtils.tryCast(
-                yamlSection,
-                YAMLKeyValue::class.java
-            )
-            if (yamlKey != null && getText(yamlKey.key) == section) {
-                // Обход нужной секции
-                val yamlIDs = yamlSection.lastChild.children
-                for (id in yamlIDs) {
-                    val yamlID = ObjectUtils.tryCast(
-                        id,
-                        YAMLKeyValue::class.java
-                    )
-                    if (yamlID != null) {
-                        // Обход полей
-                        val fields = id.lastChild.children
-                        for (field in fields) {
-                            val yamlField = ObjectUtils.tryCast(
-                                field,
-                                YAMLKeyValue::class.java
-                            )
-                            // Если нашли поле location
-                            val key = getText(yamlField!!.key)
-                            val location = getText(yamlField.value)
-                            if (yamlField != null && key == "location" && location.length > 0) {
-                                // appendDividerItem(result, PsiUtils.getText(field.getLastChild()), context, "/");
-                                result.add(getText(yamlField.value))
-                            }
+    val yamlSections = document.firstChild.children
+    // Обход корневых секций
+    for (yamlSection in yamlSections) {
+        val yamlKey = ObjectUtils.tryCast(
+            yamlSection,
+            YAMLKeyValue::class.java
+        )
+        if (yamlKey != null && getText(yamlKey.key) == section) {
+            // Обход нужной секции
+            val yamlIDs = yamlSection.lastChild.children
+            for (id in yamlIDs) {
+                val yamlID = ObjectUtils.tryCast(
+                    id,
+                    YAMLKeyValue::class.java
+                )
+                if (yamlID != null) {
+                    // Обход полей
+                    val fields = id.lastChild.children
+                    for (field in fields) {
+                        val yamlField = ObjectUtils.tryCast(
+                            field,
+                            YAMLKeyValue::class.java
+                        )
+                        // Если нашли поле location
+                        val key = getText(yamlField!!.key)
+                        val location = getText(yamlField.value)
+                        if (key == "location" && location.length > 0) {
+                            // appendDividerItem(result, PsiUtils.getText(field.getLastChild()), context, "/");
+                            result.add(getText(yamlField.value))
                         }
                     }
                 }

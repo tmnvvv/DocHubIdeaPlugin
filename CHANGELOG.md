@@ -19,3 +19,4 @@
 - Network diagram support
 - Widgets
 - Added syntax color support in Markdown documents
+

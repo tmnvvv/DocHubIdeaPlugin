@@ -32,7 +32,7 @@ class FormattingInsertHandler(private val key: CompletionKey, private val docume
     }
 
     private val charsToInsert: String
-        private get() {
+        get() {
             val result = StringBuilder(":")
             when (key.valueType) {
                 CompletionKey.ValueType.MAP -> result.append("\n")

@@ -15,8 +15,7 @@ import com.intellij.ui.jcef.JBCefJSQuery
 import org.apache.commons.io.FilenameUtils
 import org.dochub.idea.arch.indexing.getRootManifestName
 import org.dochub.idea.arch.jsonschema.applySchema
-import org.dochub.idea.arch.manifests.PlantUMLDriver.init
-import org.dochub.idea.arch.manifests.PlantUMLDriver.makeSVG
+import org.dochub.idea.arch.manifests.PlantUMLDriver
 import org.dochub.idea.arch.settings.SettingsState
 import org.dochub.idea.arch.wizard.RootManifest
 import java.io.File
@@ -35,7 +34,7 @@ class DocHubToolWindow(project: Project) : JBCefBrowser("/") {
     private val jsGateway: JSGateway
 
     private val injectionSettings: String
-        private get() {
+        get() {
             val settingsState: SettingsState = SettingsState.instance
             val settings: MutableMap<String, Any> = HashMap()
             val render: MutableMap<String, Any> = HashMap()
@@ -97,7 +96,7 @@ class DocHubToolWindow(project: Project) : JBCefBrowser("/") {
                     val jsonSource = jsonObj["source"]
                     val source: String = if (jsonSource != null) jsonSource.asText() else "@startuml\n@enduml"
                     val response: MutableMap<String, String?> = mutableMapOf()
-                    response["data"] = makeSVG(source)
+                    response["data"] = PlantUMLDriver.makeSVG(source)
                     result.append(mapper.writeValueAsString(response))
                 } else if (url == NAVI_GOTO_SOURCE_URI) {
                     navigation.go(jsonObj)
@@ -114,7 +113,7 @@ class DocHubToolWindow(project: Project) : JBCefBrowser("/") {
                     val basePath = project.basePath + "/"
                     val parentPath: String = File(getRootManifestName(project)).getParent()
                     val sourcePath = (basePath
-                            + (if (parentPath != null) "$parentPath/" else "")
+                            + ("$parentPath/")
                             + url.substring(20).split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0])
                     val file = File(sourcePath)
                     if (!file.exists() || file.isDirectory) {
@@ -164,7 +163,7 @@ class DocHubToolWindow(project: Project) : JBCefBrowser("/") {
     }
 
     init {
-        init()
+        PlantUMLDriver().init()
 
         this.project = project
         val eventBus = project.messageBus.connect()

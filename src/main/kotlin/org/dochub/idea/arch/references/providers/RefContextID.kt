@@ -9,7 +9,7 @@ import org.jetbrains.yaml.psi.YAMLMapping
 
 class RefContextID : RefBaseID() {
     override val keyword: String
-        protected get() = Companion.keyword
+        get() = Companion.keyword
     override val refPattern: ElementPattern<out PsiElement?>
         get() = pattern()
 

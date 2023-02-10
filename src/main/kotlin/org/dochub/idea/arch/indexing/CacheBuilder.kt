@@ -107,8 +107,7 @@ private fun getFromEnv(project: Project): String? {
 }
 
 fun getRootManifestName(project: Project): String {
-    var rootManifest: String? = null
-    rootManifest = if (isFileExists(project, "dochub.yaml")) // Если это проект DocHub
+    var rootManifest: String? = if (isFileExists(project, "dochub.yaml")) // Если это проект DocHub
         "dochub.yaml" else getFromEnv(project)
     return rootManifest ?: "dochub.yaml"
 }

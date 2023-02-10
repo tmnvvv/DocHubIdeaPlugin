@@ -6,7 +6,6 @@ import com.intellij.psi.PsiElement
 import org.dochub.idea.arch.completions.CompletionKey
 import org.jetbrains.yaml.psi.YAMLDocument
 import org.jetbrains.yaml.psi.YAMLKeyValue
-import java.util.List
 
 
 class Technologies : FilteredCustomProvider() {
@@ -24,7 +23,7 @@ class Technologies : FilteredCustomProvider() {
         const val KEYWORD = "technologies"
         val keys = listOf("sections", "items")
 
-        private val COMPLETION_KEYS: Collection<CompletionKey> = List.of(
+        private val COMPLETION_KEYS = listOf(
             CompletionKey("sections", CompletionKey.ValueType.MAP),
             CompletionKey("items", CompletionKey.ValueType.MAP)
         )

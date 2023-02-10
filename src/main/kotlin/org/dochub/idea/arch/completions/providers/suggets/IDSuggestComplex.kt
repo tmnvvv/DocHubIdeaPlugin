@@ -36,33 +36,30 @@ open class IDSuggestComplex : BaseSuggest() {
                     val project = parameters.position.project
                     val document: PsiElement = getYamlDocumentByPsiElement(psiPosition)
                     val cacheManager = CachedValuesManager.getManager(project)
-                    val ids = CachedValuesManager.getCachedValue(
+                    val ids = cacheManager.getCachedValue(
                         parameters.originalFile,
                         cacheSectionKey,
                         CachedValueProvider {
                             val suggest: MutableList<String> =
                                 ArrayList()
                             val globalCache: Map<String, SectionData> = getProjectCache(project)
-                            if (globalCache != null) {
-                                for (section in sections) {
-                                    val localIds: List<String> = scanYamlPsiTreeToID(document, section)
-                                    for (id in localIds) if (suggest.indexOf(id) < 0) suggest.add(id)
-                                    val projectIds: SectionData? = globalCache[section]
-                                    if (section != null) {
-                                        if (projectIds != null) {
-                                            for (id in projectIds.ids.keys) {
-                                                if (suggest.indexOf(id) < 0) suggest.add(id)
-                                            }
-                                        }
+                            for (section in sections) {
+                                val localIds: List<String> = scanYamlPsiTreeToID(document, section)
+                                for (id in localIds) if (suggest.indexOf(id) < 0) suggest.add(id)
+                                val projectIds: SectionData? = globalCache[section]
+                                if (projectIds != null) {
+                                    for (id in projectIds.ids.keys) {
+                                        if (suggest.indexOf(id) < 0) suggest.add(id)
                                     }
                                 }
                             }
-                            CachedValueProvider.Result.create<List<String>>(
+                            CachedValueProvider.Result.create(
                                 suggest,
                                 PsiModificationTracker.MODIFICATION_COUNT,
                                 ProjectRootManager.getInstance(project)
                             )
-                        }
+                        },
+                        true
                     )
                     for (id in ids) {
                         resultSet.addElement(LookupElementBuilder.create(id))

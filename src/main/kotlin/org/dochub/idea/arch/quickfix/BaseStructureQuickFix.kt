@@ -52,7 +52,7 @@ open class BaseStructureQuickFix : BaseQuickFix {
                     }
                 }
             }
-        } else result = requiredStructure?.asList()?.toMutableList()
+        } else result = requiredStructure.asList().toMutableList()
         if (result != null) {
             if (result.size > 0) {
                 holder.newAnnotation(HighlightSeverity.ERROR, "Lost properties")
@@ -90,7 +90,7 @@ open class BaseStructureQuickFix : BaseQuickFix {
     @Throws(IncorrectOperationException::class)
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
         val builder = StringBuilder("\n")
-        for (prop in needToAppendProps!!) {
+        for (prop in needToAppendProps) {
             builder.append("  $prop: \n")
         }
         val yamlFile = YAMLElementGenerator.getInstance(file.project).createDummyYamlWithText(builder.toString())

@@ -12,8 +12,8 @@ import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.util.ProcessingContext
-import org.dochub.idea.arch.utils.getYamlDocumentByPsiElement
 import org.dochub.idea.arch.utils.scanYamlPsiTreeToID
+import org.dochub.idea.arch.utils.getYamlDocumentByPsiElement
 
 open class IDSuggest : BaseSuggest() {
 
@@ -40,18 +40,17 @@ open class IDSuggest : BaseSuggest() {
                     val project = parameters.position.project
                     val document: PsiElement = getYamlDocumentByPsiElement(psiPosition)
                     val cacheManager = CachedValuesManager.getManager(project)
-                    val ids = CachedValuesManager.getCachedValue<List<String>>(
+
+                    val ids: List<String> = cacheManager.getCachedValue(
                         parameters.originalFile,
                         cacheSectionKey,
                         CachedValueProvider {
                             val suggest: MutableList<String> = scanYamlPsiTreeToID(document, section)
                             val globalCache = getProjectCache(project)
-                            if (globalCache != null) {
-                                val section = globalCache[section]
-                                if (section != null) {
-                                    for (id in section.ids.keys) {
-                                        if (suggest.indexOf(id) < 0) suggest.add(id)
-                                    }
+                            val section = globalCache[section]
+                            if (section != null) {
+                                for (id in section.ids.keys) {
+                                    if (suggest.indexOf(id) < 0) suggest.add(id)
                                 }
                             }
                             CachedValueProvider.Result.create(
@@ -59,7 +58,8 @@ open class IDSuggest : BaseSuggest() {
                                 PsiModificationTracker.MODIFICATION_COUNT,
                                 ProjectRootManager.getInstance(project)
                             )
-                        }
+                        },
+                        true
                     )
                     for (id in ids) {
                         resultSet.addElement(LookupElementBuilder.create(id))
