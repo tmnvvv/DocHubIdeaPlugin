@@ -7,21 +7,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFileWrapper;
 import org.springframework.beans.factory.annotation.*;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Download {
-    static public void download(String content, String title, String description) {
+    static public void download(String content, String title, String description, String extension) {
         Timer timer = new Timer("Download diagram");
         timer.schedule(new TimerTask() {
             public void run() {
                 ApplicationManager.getApplication().invokeLater(() -> {
 
-                        FileSaverDescriptor descriptor = new FileSaverDescriptor(title, description, new String[]{"svg"});
+                        FileSaverDescriptor descriptor = new FileSaverDescriptor(title, description, new String[]{extension});
                         FileSaverDialog dialog = FileChooserFactory.getInstance().createSaveFileDialog(descriptor, (Project) null);
                         VirtualFileWrapper vf = dialog.save((VirtualFile) null, "diagram");
 
@@ -30,9 +27,16 @@ public class Download {
                         }
                         File file = vf.getFile();
                         try {
-                            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
-                            writer.append(content);
-                            writer.close();
+                            if (content.substring(0, 5).equals("data:")) {
+                                byte[] imageByteArray = java.util.Base64.getMimeDecoder().decode(content.split(",")[1]);
+                                FileOutputStream stream = new FileOutputStream(file);
+                                stream.write(imageByteArray);
+                                stream.close();
+                            } else {
+                                BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+                                writer.append(content);
+                                writer.close();
+                            }
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
