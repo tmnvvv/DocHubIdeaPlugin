@@ -26,6 +26,7 @@ val genPsiPath: String by project
 val genParserPurgeOldFiles: String by project
 val kotlinVersion: String by project
 val JSONataVersion: String by project
+val plantumlVersion: String by project
 val pluginSinceBuild: String by project
 val pluginUntilBuild: String by project
 
@@ -40,7 +41,8 @@ dependencies {
      * Базовые зависимости
      */
     implementation ("com.ibm.jsonata4java:JSONata4Java:$JSONataVersion")
-    implementation(files("jars/elk-full.jar", "jars/plantuml.jar"))
+    implementation("net.sourceforge.plantuml:plantuml:$plantumlVersion")
+    implementation(files("jars/elk-full.jar"))
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     /**
      * Тестовые зависимости
