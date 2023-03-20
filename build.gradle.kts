@@ -40,7 +40,7 @@ dependencies {
      * Базовые зависимости
      */
     implementation ("com.ibm.jsonata4java:JSONata4Java:$JSONataVersion")
-    implementation(files("libs/elk-full.jar", "jars/plantuml.jar"))
+    implementation(files("jars/elk-full.jar", "jars/plantuml.jar"))
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     /**
      * Тестовые зависимости
