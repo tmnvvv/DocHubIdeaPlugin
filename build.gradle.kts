@@ -27,6 +27,7 @@ val genParserPurgeOldFiles: String by project
 val kotlinVersion: String by project
 val JSONataVersion: String by project
 val plantumlVersion: String by project
+val elkVersion: String by project
 val pluginSinceBuild: String by project
 val pluginUntilBuild: String by project
 
@@ -42,7 +43,8 @@ dependencies {
      */
     implementation ("com.ibm.jsonata4java:JSONata4Java:$JSONataVersion")
     implementation("net.sourceforge.plantuml:plantuml:$plantumlVersion")
-    implementation(files("jars/elk-full.jar"))
+    implementation("org.eclipse.elk:org.eclipse.elk.alg.layered:$elkVersion")
+    implementation("org.eclipse.elk:org.eclipse.elk.core:$elkVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     /**
      * Тестовые зависимости
@@ -111,7 +113,6 @@ tasks {
     patchPluginXml {
         sinceBuild.set(pluginSinceBuild)
         untilBuild.set(pluginUntilBuild)
-        changeNotes.set(file("src/main/resources/html/change-notes.html").readText())
     }
 
 
