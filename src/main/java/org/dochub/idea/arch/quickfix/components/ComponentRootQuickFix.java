@@ -8,7 +8,7 @@ import org.jetbrains.yaml.psi.YAMLKeyValue;
 import org.jetbrains.yaml.psi.YAMLMapping;
 
 public class ComponentRootQuickFix extends BaseStructureQuickFix {
-    public static String requiredProps[] = {
+    public static String[] requiredProps = {
             "title", "entity"
     };
 

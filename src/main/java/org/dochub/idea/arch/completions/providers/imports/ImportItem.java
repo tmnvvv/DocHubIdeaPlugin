@@ -18,7 +18,8 @@ import org.jetbrains.yaml.psi.YAMLKeyValue;
 import java.util.List;
 
 public class ImportItem extends CustomProvider {
-    private static String keyword = "imports";
+
+    private static final String keyword = "imports";
 
     public static final ElementPattern<? extends PsiElement> rootPattern = PlatformPatterns.or(
             PlatformPatterns.psiElement()

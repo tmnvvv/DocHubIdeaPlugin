@@ -9,7 +9,8 @@ import org.jetbrains.yaml.psi.YAMLKeyValue;
 import org.jetbrains.yaml.psi.YAMLMapping;
 
 public class NamespaceID extends IDSuggestComplex {
-    private static String keyword = "namespaces";
+
+    private static final String keyword = "namespaces";
 
     @Override
     protected String[] getSections() {

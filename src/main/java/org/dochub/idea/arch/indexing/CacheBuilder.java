@@ -29,8 +29,6 @@ public class CacheBuilder {
                 String[] lineStruct = line.split("\\=");
                 result.put(lineStruct[0], lineStruct.length > 1 ? lineStruct[1] : null);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -38,11 +36,11 @@ public class CacheBuilder {
     }
 
     public static class SectionData {
-        public ArrayList<String> locations = new ArrayList<>();
-        public Map<String, ArrayList> ids = new HashMap();
+        public List<String> locations = new ArrayList<>();
+        public Map<String, List> ids = new HashMap<>();
     }
 
-     private static void manifestMerge(Map<String, SectionData> context, DocHubIndexData data, VirtualFile source) {
+    private static void manifestMerge(Map<String, SectionData> context, DocHubIndexData data, VirtualFile source) {
         for (String sectionKey : data.keySet()) {
 
             if (sectionKey.equals("imports")) continue;
@@ -59,11 +57,7 @@ public class CacheBuilder {
             // Идентификаторы
             for (int i = 0; i < section.ids.size(); i++) {
                 String id = section.ids.get(i);
-                ArrayList sources = sectionData.ids.get(id);
-                if (sources == null) {
-                    sources = new ArrayList<String>();
-                    sectionData.ids.put(id, sources);
-                }
+                List sources = sectionData.ids.computeIfAbsent(id, k -> new ArrayList<String>());
                 sources.add(source);
             }
             // Локации
@@ -91,7 +85,7 @@ public class CacheBuilder {
                         for (int i = 0; i < imports.imports.size(); i ++) {
                             String importPath =
                                     (vFile.getParent().getPath() + "/" + imports.imports.get(i))
-                                            .substring(project.getBasePath().length());
+                                            .substring(Objects.requireNonNull(project.getBasePath()).length());
                             parseYamlManifest(project, importPath, context);
                         }
                     }
@@ -122,7 +116,7 @@ public class CacheBuilder {
         return rootManifest != null ? rootManifest : "dochub.yaml";
     }
 
-    private static Key cacheProjectKey = Key.create("dochub-global");
+    private static final Key cacheProjectKey = Key.create("dochub-global");
 
     private static class GlobalCacheProvider implements CachedValueProvider {
         private Project project;
@@ -136,8 +130,7 @@ public class CacheBuilder {
             Map<String, SectionData> manifest = new HashMap<>();
             String rootManifest = getRootManifestName(project);
 
-            if (rootManifest != null)
-                parseYamlManifest(project, rootManifest, manifest);
+            parseYamlManifest(project, rootManifest, manifest);
 
             return Result.create(
                     manifest,
@@ -146,7 +139,7 @@ public class CacheBuilder {
         }
     }
 
-    private static Map<Project, GlobalCacheProvider> globalCacheProviders = new HashMap<>();
+    private static final Map<Project, GlobalCacheProvider> globalCacheProviders = new HashMap<>();
 
     public static Map<String, SectionData> getProjectCache(Project project) {
         GlobalCacheProvider globalCacheProvider = globalCacheProviders.get(project);

@@ -9,7 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.yaml.psi.YAMLKeyValue;
 
 public class FormItemFieldRequired extends CustomProvider {
-    private static String keyword = "required";
+
+    private static final String keyword = "required";
     private static final String[] keys = {
             "true", "false"
     };

@@ -9,7 +9,8 @@ import org.dochub.idea.arch.completions.providers.CustomProvider;
 import org.jetbrains.yaml.psi.YAMLKeyValue;
 
 public class DatasetOrigin extends IDSuggestDatasets {
-    private static String keyword = "origin";
+
+    private static final String keyword = "origin";
 
     @Override
     protected ElementPattern<? extends PsiElement> getPattern() {

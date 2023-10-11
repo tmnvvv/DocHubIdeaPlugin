@@ -10,7 +10,6 @@ import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.yaml.psi.YAMLScalarText;
 
 public class BaseReferencesProvider  extends PsiReferenceProvider {
 
@@ -28,9 +27,6 @@ public class BaseReferencesProvider  extends PsiReferenceProvider {
 
     @Override
     public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-        if (element.getClass() == YAMLScalarText.class) {
-
-        }
         // return new PsiReference[0];
         return PsiReference.EMPTY_ARRAY;
     }

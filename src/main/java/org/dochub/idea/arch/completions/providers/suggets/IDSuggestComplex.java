@@ -29,7 +29,7 @@ public class IDSuggestComplex extends BaseSuggest {
     protected String[] getSections() {
         return new String[]{};
     }
-    private Key cacheSectionKey = Key.create("$complex-ids");
+    private final Key cacheSectionKey = Key.create("$complex-ids");
 
     @Override
     public void appendToCompletion(CompletionContributor completion) {

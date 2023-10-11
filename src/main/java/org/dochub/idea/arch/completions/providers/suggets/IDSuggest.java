@@ -21,11 +21,12 @@ import java.util.List;
 import java.util.Map;
 
 public class IDSuggest extends BaseSuggest {
+
+    private final Key cacheSectionKey;
     protected ElementPattern<? extends PsiElement> getPattern() {
         return PlatformPatterns.psiElement();
     }
 
-    private Key cacheSectionKey = null;
 
     protected String getSection() {
         return "undefined";

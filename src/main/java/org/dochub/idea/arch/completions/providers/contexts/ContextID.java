@@ -10,7 +10,7 @@ import org.jetbrains.yaml.psi.YAMLKeyValue;
 import org.jetbrains.yaml.psi.YAMLMapping;
 
 public class ContextID extends IDSuggestContexts {
-    private static String keyword = "contexts";
+    private static final String keyword = "contexts";
 
     @Override
     protected ElementPattern<? extends PsiElement> getPattern() {

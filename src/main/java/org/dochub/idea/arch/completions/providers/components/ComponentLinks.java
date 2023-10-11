@@ -11,7 +11,7 @@ import org.jetbrains.yaml.psi.YAMLKeyValue;
 import org.jetbrains.yaml.psi.YAMLSequenceItem;
 
 public class ComponentLinks extends CustomProvider {
-    private static String keyword = "links";
+    private static final String keyword = "links";
     private static final String[] keys = {
             "id", "title", "contract", "direction"
     };

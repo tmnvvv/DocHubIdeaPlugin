@@ -34,7 +34,7 @@ public abstract class FilteredCustomProvider extends CustomProvider {
     protected abstract int getKeyDocumentLevel();
 
     @Override
-    public @NotNull void appendToCompletion(CompletionContributor completion) {
+    public void appendToCompletion(CompletionContributor completion) {
         completion.extend(
                 CompletionType.BASIC,
                 getRootPattern(),

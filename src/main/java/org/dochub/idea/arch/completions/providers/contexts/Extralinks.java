@@ -10,7 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.yaml.psi.YAMLKeyValue;
 
 public class Extralinks extends CustomProvider {
-    private static String keyword = "extra-links";
+
+    private static final String keyword = "extra-links";
     private static final String[] keys = {
             "true", "false"
     };

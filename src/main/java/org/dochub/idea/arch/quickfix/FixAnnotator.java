@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class FixAnnotator implements Annotator {
 
-    private BaseQuickFix[] fixes = {
+    private final BaseQuickFix[] fixes = {
             new ComponentRootQuickFix(),
             new AspectRootQuickFix(),
             new DocRootQuickFix(),

@@ -12,7 +12,9 @@ import org.jetbrains.yaml.psi.YAMLDocument;
 import org.jetbrains.yaml.psi.YAMLKeyValue;
 
 public class FormItem extends CustomProvider {
-    private static String keyword = "forms";
+
+    private static final String keyword = "forms";
+
     private static final String[] keys = {
             "entity", "fields"
     };

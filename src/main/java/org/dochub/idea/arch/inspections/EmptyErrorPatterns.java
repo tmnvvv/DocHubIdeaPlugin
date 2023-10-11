@@ -21,7 +21,7 @@ import java.util.List;
 
 public class EmptyErrorPatterns {
 
-    private static ElementPattern<? extends PsiElement> patterns[] = null;
+    private static ElementPattern<? extends PsiElement>[] patterns = null;
     private static PatternCondition<PsiElement> emptyChecker = null;
 
     static ElementPattern<? extends PsiElement>[] getPatterns() {
@@ -37,7 +37,7 @@ public class EmptyErrorPatterns {
                 }
             };
 
-            patterns = new ElementPattern[]{
+            patterns = new ElementPattern[] {
                     makeRootPattern("Doc field checker", "docs", DocRootQuickFix.requiredProps),
                     makeRootPattern("Aspect field checker", "aspects", AspectRootQuickFix.requiredProps),
                     makeRootPattern("Component field checker", "components", ComponentRootQuickFix.requiredProps),
@@ -51,21 +51,21 @@ public class EmptyErrorPatterns {
     private static class RequiredFieldChecker extends PatternCondition<PsiElement> {
         List<String> fields = null;
 
-        public RequiredFieldChecker(@Nullable @NonNls String debugMethodName, String fields[]) {
+        public RequiredFieldChecker(@Nullable @NonNls String debugMethodName, String []fields) {
             super(debugMethodName);
             this.fields = List.of(fields);
         }
 
         @Override
         public boolean accepts(@NotNull PsiElement element, ProcessingContext context) {
-            return fields.indexOf(element.getText()) >= 0;
+            return fields.contains(element.getText());
         }
     }
 
     static ElementPattern<? extends PsiElement> makeRootPattern(
             String debugMethodName,
             String keyword,
-            String fields[]) {
+            String []fields) {
         return  PlatformPatterns.psiElement()
                 .beforeLeaf(":")
                 .with(emptyChecker)

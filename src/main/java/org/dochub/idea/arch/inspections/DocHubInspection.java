@@ -28,7 +28,7 @@ public class DocHubInspection extends LocalInspectionTool {
             return noProblemsFound();
         }
 
-        PsiElement errors[] = PsiTreeUtil.collectElements(psiFile, element -> {
+        PsiElement[] errors = PsiTreeUtil.collectElements(psiFile, element -> {
             for(ElementPattern<? extends PsiElement> pattern: EmptyErrorPatterns.getPatterns()) {
                 if(pattern.accepts(element)) return true;
             }

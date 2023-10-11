@@ -94,7 +94,7 @@ public class RefBaseID extends BaseReferencesProvider {
         List<PsiReference> refs = new ArrayList<>();
 
         if (id != null && components != null) {
-            ArrayList<VirtualFile> files = (ArrayList<VirtualFile>) components.ids.get(id);
+            List<VirtualFile> files = (List<VirtualFile>) components.ids.get(id);
             if (files != null) {
                 for (int i = 0; i < files.size(); i++) {
                     PsiFile targetFile = PsiManager.getInstance(project).findFile(files.get(i));

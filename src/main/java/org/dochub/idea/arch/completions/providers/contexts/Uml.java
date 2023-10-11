@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.yaml.psi.YAMLKeyValue;
 
 public class Uml extends CustomProvider {
-    private static String keyword = "uml";
+    private static final String keyword = "uml";
     private static final String[] keys = {
             "$notation", "$autor", "$moment", "$before", "$after"
     };

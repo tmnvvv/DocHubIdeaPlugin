@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LocationSuggest extends BaseSuggest {
-    private Key cacheSectionKey = null;
+    private final Key cacheSectionKey;
 
     protected String getSection() {
         return "undefined";

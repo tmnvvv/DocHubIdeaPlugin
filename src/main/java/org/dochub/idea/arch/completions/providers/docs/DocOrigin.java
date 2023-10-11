@@ -8,7 +8,8 @@ import org.dochub.idea.arch.completions.providers.suggets.IDSuggestDatasets;
 import org.jetbrains.yaml.psi.YAMLKeyValue;
 
 public class DocOrigin extends IDSuggestDatasets {
-    private static String keyword = "origin";
+
+    private static final String keyword = "origin";
 
     @Override
     protected ElementPattern<? extends PsiElement> getPattern() {

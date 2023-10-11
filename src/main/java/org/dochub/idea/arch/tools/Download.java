@@ -18,8 +18,8 @@ public class Download {
         timer.schedule(new TimerTask() {
             public void run() {
                 ApplicationManager.getApplication().invokeLater(() -> {
-                        byte payload[] = null;
-                        String exts[] = new String[]{};
+                        byte[] payload = null;
+                        String[] exts = new String[]{};
                         if (content.startsWith("data:")) {
                             String[] parts = content.split(",");
                             payload = Base64.getDecoder().decode(parts[1]);

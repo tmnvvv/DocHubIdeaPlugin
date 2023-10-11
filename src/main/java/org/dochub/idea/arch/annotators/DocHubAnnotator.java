@@ -18,7 +18,7 @@ public class DocHubAnnotator {
 
     static public List<EntityRef> parseComment(PsiElement element) {
         PsiComment literalExpression = (PsiComment) element;
-        String comment = literalExpression.getText() instanceof String ? (String) literalExpression.getText() : null;
+        String comment = literalExpression.getText() != null ? literalExpression.getText() : null;
 
         ArrayList<EntityRef> result = new ArrayList<>();
         Matcher groups = Pattern.compile("(\\@dochub\\:)([a-z]+)\\/([a-zA-Z0-9\\.\\_\\-]+)").matcher(comment);

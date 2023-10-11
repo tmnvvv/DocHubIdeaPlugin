@@ -17,7 +17,8 @@ import org.jetbrains.yaml.psi.YAMLKeyValue;
 import java.util.List;
 
 public class DocSource extends CustomProvider {
-    private static String keyword = "source";
+
+    private static final String keyword = "source";
 
     public static final ElementPattern<? extends PsiElement> rootPattern =
             PlatformPatterns.psiElement()

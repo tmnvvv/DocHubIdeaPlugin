@@ -35,7 +35,7 @@ public class Root extends FilteredCustomProvider {
                     .withParents(YAMLScalar.class, YAMLDocument.class)
     );
 
-    private static PatternCondition<PsiElement> isNextLine = new PatternCondition<PsiElement>("") {
+    private static final PatternCondition<PsiElement> isNextLine = new PatternCondition<PsiElement>("") {
         @Override
         public boolean accepts(@NotNull PsiElement psiElement, ProcessingContext context) {
 //            String text = PsiUtils.getText(psiElement.getContext());

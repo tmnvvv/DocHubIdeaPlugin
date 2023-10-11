@@ -8,7 +8,8 @@ import org.jetbrains.yaml.psi.YAMLKeyValue;
 import org.jetbrains.yaml.psi.YAMLSequenceItem;
 
 public class RefImportsSource extends RefBaseSource {
-    private static String keyword = "imports";
+
+    private static final String keyword = "imports";
 
     @Override
     public ElementPattern<? extends PsiElement> getRefPattern() {

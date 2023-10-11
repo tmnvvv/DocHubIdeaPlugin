@@ -8,6 +8,7 @@ import com.intellij.psi.PsiNamedElement
 import org.dochub.idea.arch.wordScanner.JSONataWordScanner
 
 class JSONataFindUsagesProvider : FindUsagesProvider {
+
     override fun canFindUsagesFor(psiElement: PsiElement): Boolean = psiElement is PsiNamedElement
 
     override fun getHelpId(psiElement: PsiElement): String = HelpID.FIND_OTHER_USAGES

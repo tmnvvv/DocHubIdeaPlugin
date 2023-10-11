@@ -76,8 +76,8 @@
                 implementationClass="org.dochub.idea.arch.jsonata.JSONataSyntaxHighlighterFactory"
         />
 
-<!--        <lang.findUsagesProvider language="JSONata" implementationClass="org.dochub.idea.arch.findUsages.JSONataFindUsagesProvider"/>-->
-<!--        <lang.refactoringSupport language="JSONata" implementationClass="psi.jsonata.org.dochub.idea.arch.JSONataRefactoringSupportProvider"/>-->
+        <lang.findUsagesProvider language="JSONata" implementationClass="org.dochub.idea.arch.findUsages.JSONataFindUsagesProvider"/>
+        <lang.refactoringSupport language="JSONata" implementationClass="org.dochub.idea.arch.jsonata.psi.JSONataRefactoringSupportProvider"/>
 
         <!-- YAML -->
         <completion.contributor language="yaml" implementationClass="org.dochub.idea.arch.completions.YamlCompletion"/>

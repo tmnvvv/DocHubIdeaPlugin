@@ -19,9 +19,10 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.messages.MessageBusConnection;
 import org.dochub.idea.arch.references.providers.RefBaseID;
 import org.dochub.idea.arch.indexing.CacheBuilder;
+import org.dochub.idea.arch.references.providers.RefBaseID;
 import org.dochub.idea.arch.utils.VirtualFileSystemUtils;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.dochub.idea.arch.tools.Consts.ROOT_SOURCE_PATH;
@@ -114,27 +115,17 @@ public class Navigation {
 
     public void go(String source, String entity, String id) {
         Application app = ApplicationManager.getApplication();
-        app.invokeLater(() -> gotoByID(source, entity, id), ModalityState.NON_MODAL);
+        app.invokeLater(() -> gotoByID(source, entity, id), ModalityState.nonModal());
     }
 
     public void go(String source, int pos) {
         Application app = ApplicationManager.getApplication();
-        app.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                gotoByPosition(source, pos);
-            }
-        }, ModalityState.NON_MODAL);
+        app.invokeLater(() -> gotoByPosition(source, pos), ModalityState.nonModal());
     }
 
     public void go(String source) {
         Application app = ApplicationManager.getApplication();
-        app.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                gotoBySource(source);
-            }
-        }, ModalityState.NON_MODAL);
+        app.invokeLater(() -> gotoBySource(source), ModalityState.nonModal());
     }
 
     public void go(JsonNode location) {
@@ -152,7 +143,7 @@ public class Navigation {
                 if (section == null) return;
                 CacheBuilder.SectionData components = cache == null ? null : cache.get(section);
                 if (components == null) return;;
-                ArrayList<VirtualFile> files = components.ids.get(id);
+                List<VirtualFile> files = components.ids.get(id);
                 if (files != null && files.size() > 0) source = files.get(0).getPath();
             }
             go(source, entity, id);

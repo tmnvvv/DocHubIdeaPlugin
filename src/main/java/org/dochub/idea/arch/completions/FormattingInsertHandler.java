@@ -12,6 +12,8 @@ import com.intellij.util.text.CharArrayUtil;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class FormattingInsertHandler implements InsertHandler {
     private final CompletionKey key;
 
@@ -44,25 +46,17 @@ public class FormattingInsertHandler implements InsertHandler {
         TabOutScopesTracker.getInstance().registerEmptyScopeAtCaret(context.getEditor());
         editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
         editor.getSelectionModel().removeSelection();
-        AutoPopupController.getInstance(editor.getProject()).scheduleAutoPopup(editor);
+        AutoPopupController.getInstance(Objects.requireNonNull(editor.getProject())).scheduleAutoPopup(editor);
     }
 
     private String getCharsToInsert() {
+
         StringBuilder result = new StringBuilder(":");
         switch (key.getValueType()) {
-            case MAP:
-                result.append("\n")
-                        .append(StringUtils.repeat(" ", (documentLevel + 1) * 2));
-                break;
-            case LIST:
-                result.append("\n")
-                        .append(StringUtils.repeat(" ", (documentLevel + 1) * 2))
-                        .append("- ");
-                break;
-            default:
-                result.append(" ");
+            case MAP -> result.append("\n").append(StringUtils.repeat(" ", (documentLevel + 1) * 2));
+            case LIST -> result.append("\n").append(StringUtils.repeat(" ", (documentLevel + 1) * 2)).append("- ");
+            default -> result.append(" ");
         }
         return result.toString();
     }
-
 }

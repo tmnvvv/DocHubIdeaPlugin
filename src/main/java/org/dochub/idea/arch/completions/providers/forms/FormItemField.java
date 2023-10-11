@@ -11,7 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.yaml.psi.YAMLKeyValue;
 
 public class FormItemField extends CustomProvider {
-    private static String keyword = "fields";
+
+    private static final String keyword = "fields";
     private static final String[] keys = {
             "title", "required"
     };

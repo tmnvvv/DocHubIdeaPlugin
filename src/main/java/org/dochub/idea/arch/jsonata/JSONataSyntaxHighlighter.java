@@ -7,7 +7,6 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.*;
 import com.intellij.psi.tree.IElementType;
 import org.dochub.idea.arch.jsonata.psi.JSONataTypes;
-import org.dochub.idea.arch.jsonata.psi.*;
 import org.jetbrains.annotations.NotNull;
 
 

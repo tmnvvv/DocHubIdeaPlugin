@@ -8,7 +8,8 @@ import org.dochub.idea.arch.completions.providers.suggets.LocationSuggestDocumen
 import org.jetbrains.yaml.psi.YAMLKeyValue;
 
 public class DocLocation extends LocationSuggestDocument {
-    private static String keyword = "location";
+
+    private static final String keyword = "location";
 
     @Override
     protected ElementPattern<? extends PsiElement> getPattern() {

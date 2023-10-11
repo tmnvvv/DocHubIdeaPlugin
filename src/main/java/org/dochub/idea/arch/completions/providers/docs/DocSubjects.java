@@ -9,7 +9,8 @@ import org.jetbrains.yaml.psi.YAMLKeyValue;
 import org.jetbrains.yaml.psi.YAMLSequenceItem;
 
 public class DocSubjects extends IDSuggestComplex {
-    private static String keyword = "subjects";
+
+    private static final String keyword = "subjects";
 
     @Override
     protected String[] getSections() {

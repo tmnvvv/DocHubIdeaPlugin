@@ -9,7 +9,7 @@ import org.dochub.idea.arch.completions.providers.CustomProvider;
 import org.jetbrains.yaml.psi.YAMLKeyValue;
 
 public class ContextLocation extends LocationSuggestContexts {
-    private static String keyword = "location";
+    private static final String keyword = "location";
 
     @Override
     protected ElementPattern<? extends PsiElement> getPattern() {

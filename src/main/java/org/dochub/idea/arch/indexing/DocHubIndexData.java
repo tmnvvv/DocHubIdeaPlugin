@@ -7,17 +7,14 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public final class DocHubIndexData extends HashMap<String, DocHubIndexData.Section> {
 
     public class Section {
-        public ArrayList<String> locations = new ArrayList();
-        public ArrayList<String> ids = new ArrayList();
-        public ArrayList<String> imports = new ArrayList<>();
+        public List<String> locations = new ArrayList<>();
+        public List<String> ids = new ArrayList<>();
+        public List<String> imports = new ArrayList<>();
         public boolean isEmpty() {
             return (locations.size() + ids.size() + imports.size()) == 0;
         }
@@ -109,7 +106,7 @@ public final class DocHubIndexData extends HashMap<String, DocHubIndexData.Secti
     }
 
     public void makeCacheDataImports(Map<String, Object> yaml) {
-        ArrayList<String> result = (ArrayList<String>) yaml.get("imports");
+        List<String> result = (List<String>) yaml.get("imports");
         if ((result != null) && (result.size() > 0)) {
             Section section = new Section();
             section.imports = result;
@@ -128,14 +125,14 @@ public final class DocHubIndexData extends HashMap<String, DocHubIndexData.Secti
                     if (object instanceof Map) {
                         Object location = ((Map) object).get("location");
                         if (location instanceof String) {
-                            if (location != null) secData.locations.add((String) location);
+                            secData.locations.add((String) location);
                         }
                     }
                 }
             }
             if ((secData.locations.size()) > 0 || (secData.ids.size() > 0) )
                 this.put(section, secData);
-        } catch (ClassCastException e) {}
+        } catch (ClassCastException ignored) {}
     }
 
     public void makeCacheDataManifest(PsiFile file) {
@@ -153,7 +150,7 @@ public final class DocHubIndexData extends HashMap<String, DocHubIndexData.Secti
                     makeCacheDataSection(sections, "docs");
                     makeCacheDataSection(sections, "datasets");
                 }
-            } catch (Exception e) {}
+            } catch (Exception ignored) {}
         }
     }
 

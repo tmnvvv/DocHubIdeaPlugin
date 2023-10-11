@@ -9,7 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.yaml.psi.YAMLKeyValue;
 
 public class UmlNotations extends CustomProvider {
-    private static String keyword = "$notation";
+
+    private static final String keyword = "$notation";
     private static final String[] keys = {
             "Sber", "C4Model", "plantuml"
     };

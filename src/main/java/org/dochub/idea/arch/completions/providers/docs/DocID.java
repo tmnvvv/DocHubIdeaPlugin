@@ -10,7 +10,8 @@ import org.jetbrains.yaml.psi.YAMLKeyValue;
 import org.jetbrains.yaml.psi.YAMLMapping;
 
 public class DocID extends IDSuggestDocuments {
-    private static String keyword = "docs";
+
+    private static final String keyword = "docs";
 
     @Override
     protected ElementPattern<? extends PsiElement> getPattern() {

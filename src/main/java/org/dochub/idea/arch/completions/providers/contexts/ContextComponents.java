@@ -9,7 +9,7 @@ import org.jetbrains.yaml.psi.YAMLKeyValue;
 import org.jetbrains.yaml.psi.YAMLSequenceItem;
 
 public class ContextComponents extends IDSuggestComponents {
-    private static String keyword = "components";
+    private static final String keyword = "components";
 
     @Override
     protected ElementPattern<? extends PsiElement> getPattern() {

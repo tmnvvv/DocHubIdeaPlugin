@@ -13,7 +13,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class SectionItem extends FilteredCustomProvider {
-    private static String keyword = "items";
+
+    private static final String keyword = "items";
 
     private static final Collection<CompletionKey> COMPLETION_KEYS = List.of(
             new CompletionKey("title"),
