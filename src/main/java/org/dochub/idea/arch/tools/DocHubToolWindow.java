@@ -10,7 +10,6 @@ import com.intellij.openapi.vfs.newvfs.*;
 import com.intellij.openapi.vfs.newvfs.events.*;
 import com.intellij.ui.jcef.*;
 import com.intellij.util.messages.*;
-import org.cef.handler.CefLoadHandler;
 import org.dochub.idea.arch.indexing.CacheBuilder;
 import org.dochub.idea.arch.jsonschema.EntityManager;
 import org.dochub.idea.arch.manifests.PlantUMLDriver;
@@ -31,7 +30,6 @@ public class DocHubToolWindow extends JBCefBrowser {
   private final Project project;
   private final Navigation navigation;
   private final JSGateway jsGateway;
-  private String html = null;
   public void reloadHtml(Boolean root) {
     SettingsState settingsState = SettingsState.getInstance();
     String currentURL = root ? "" : getCefBrowser().getURL();
@@ -48,25 +46,30 @@ public class DocHubToolWindow extends JBCefBrowser {
       loadURL(url);
     } else {
       // Если НЕ используем, то грузим из собственных ресурсов
-      if (html == null) {
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("html/plugin.html")) {
-          assert input != null;
-          html = new String(input.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-          html = e.toString();
-        }
-        html = html.replaceAll("\\%\\$dochub-api-interface-func\\%", sourceQuery.getFuncName());
+      String html;
+      try (InputStream input = getClass().getClassLoader().getResourceAsStream("html/plugin.html")) {
+        assert input != null;
+        html = new String(input.readAllBytes(), StandardCharsets.UTF_8);
+      } catch (IOException e) {
+        html = e.toString();
       }
+
+      html = html.replaceAll("\\%\\$dochub-api-interface-func\\%", sourceQuery.getFuncName());
 
       if (currentURL.length() > 0) {
         loadHTML(html, currentURL);
       } else {
-        loadHTML(html, "file:///url=main");
+        loadHTML(html);
       }
     }
+    /*
+    if (!SystemInfoRt.isWindows)
+      getCefBrowser().getUIComponent().setFocusable(false);
+     */
   }
   private JBCefJSQuery.Response requestProcessing(String json) {
     // openDevtools();
+
     StringBuilder result = new StringBuilder();
     try {
       ObjectMapper mapper = new ObjectMapper();
@@ -148,7 +151,6 @@ public class DocHubToolWindow extends JBCefBrowser {
           JsonNode jsonContent = jsonObj.get("content");
           JsonNode jsonTitle = jsonObj.get("title");
           JsonNode jsonDescription = jsonObj.get("description");
-          JsonNode jsonExtension = jsonObj.get("extension");
           if (jsonContent != null) {
             Download.download(
                     jsonContent.asText(),
@@ -217,12 +219,12 @@ public class DocHubToolWindow extends JBCefBrowser {
           if (event.getFile() != null &&
                   (
                           event instanceof VFileContentChangeEvent
-                          ||  event instanceof VFileDeleteEvent
+                                  ||  event instanceof VFileDeleteEvent
                   )
           ) {
             String path = event.getFile().getPath();
             int bpLength = Objects.requireNonNull(project.getBasePath()).length();
-            if (path.length() > bpLength) {
+            if (path.length() > bpLength && !isConfigurationFile(event.getFile())) {
               String source = path.substring(bpLength + 1);
               if (source.equals(rootManifest)) source = Consts.ROOT_SOURCE;
               jsGateway.appendMessage(Consts.ACTION_SOURCE_CHANGED, Consts.ROOT_SOURCE_PATH + source, null);
@@ -233,17 +235,24 @@ public class DocHubToolWindow extends JBCefBrowser {
     });
     sourceQuery = JBCefJSQuery.create((JBCefBrowserBase)this);
     sourceQuery.addHandler(this::requestProcessing);
-
-    setErrorPage(new JBCefBrowserBase.ErrorPage() {
-      @Override
-      public @Nullable String create(CefLoadHandler.@NotNull ErrorCode errorCode,
-                                     @NotNull String errorText,
-                                     @NotNull String failedUrl) {
-        return (errorCode == CefLoadHandler.ErrorCode.ERR_ABORTED) ?
-                null : JBCefBrowserBase.ErrorPage.DEFAULT.create(errorCode, errorText, failedUrl);
-        }
-    });
-
     reloadHtml(true);
+  }
+
+  private boolean isConfigurationFile(final VirtualFile file) {
+
+    final var extFile = getFileExt(file);
+    final var configFolder = ".idea";
+    final var fileExtensions = List.of("xml", "iml", "json");
+    return fileExtensions.stream().anyMatch(e -> e.equals(extFile)) || file.getParent().getName().equals(configFolder);
+  }
+
+  private String getFileExt(VirtualFile file) {
+
+    String fileName = file.getName();
+    int lastIndexOf = fileName.lastIndexOf(".");
+    if (lastIndexOf == -1) {
+      return "";
+    }
+    return fileName.substring(lastIndexOf);
   }
 }
