@@ -7,11 +7,8 @@ import com.api.jsonata4java.expressions.ParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.minidev.json.JSONObject;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class JSONataDriver {
     void test() {
@@ -51,13 +48,5 @@ public class JSONataDriver {
         } catch (EvaluateException | JsonProcessingException e) {
             System.err.println(e.getLocalizedMessage());
         }
-    }
-
-    private static String convertToJson(String yamlString) {
-        Yaml yaml= new Yaml();
-        Map<String,Object> map= (Map<String, Object>) yaml.load(yamlString);
-
-        JSONObject jsonObject=new JSONObject(map);
-        return jsonObject.toString();
     }
 }
