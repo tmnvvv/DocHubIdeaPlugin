@@ -23,6 +23,7 @@ import org.dochub.idea.arch.utils.VirtualFileSystemUtils;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.dochub.idea.arch.tools.Consts.ROOT_SOURCE_PATH;
 import static org.dochub.idea.arch.tools.Consts.ROOT_SOURCE_URI;
@@ -50,7 +51,7 @@ public class Navigation {
             source = CacheBuilder.getRootManifestName(project);
         } else if (uri.startsWith(ROOT_SOURCE_PATH)) {
             source = uri.substring(ROOT_SOURCE_PATH.length());
-        } else if (uri.startsWith(project.getBasePath())) {
+        } else if (uri.startsWith(Objects.requireNonNull(project.getBasePath()))) {
             source = uri.substring(project.getBasePath().length());
         }else
             source = uri;
@@ -97,14 +98,16 @@ public class Navigation {
     private void gotoBySource(String uri) {
         VirtualFile vFile = getVFile(uri);
         if (vFile != null)
-            gotoPsiElement(PsiManager.getInstance(project).findFile(vFile));
+            gotoPsiElement(Objects.requireNonNull(PsiManager.getInstance(project).findFile(vFile)));
     }
 
     private void gotoByPosition(String uri, int start) {
         VirtualFile vFile = getVFile(uri);
         if (vFile != null) {
             PsiFile targetFile = PsiManager.getInstance(project).findFile(vFile);
-            gotoPsiElement(targetFile.findElementAt(start));
+            if(targetFile != null) {
+                gotoPsiElement(Objects.requireNonNull(targetFile.findElementAt(start)));
+            }
         }
     }
 

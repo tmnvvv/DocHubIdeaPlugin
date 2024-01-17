@@ -13,8 +13,19 @@ import com.intellij.util.indexing.FileBasedIndex;
 import org.dochub.idea.arch.utils.VirtualFileSystemUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Queue;
 
 public class CacheBuilder {
     private static boolean isFileExists(Project project, String filename) {
@@ -23,9 +34,9 @@ public class CacheBuilder {
 
     private static Map<String, String> parseEnvFile(String filename) {
         Map<String, String> result = new HashMap<>();
-        try( BufferedReader br = new BufferedReader( new FileReader( filename))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
-            while(( line = br.readLine()) != null ) {
+            while ((line = br.readLine()) != null) {
                 String[] lineStruct = line.split("\\=");
                 result.put(lineStruct[0], lineStruct.length > 1 ? lineStruct[1] : null);
             }
@@ -42,7 +53,7 @@ public class CacheBuilder {
         public Map<String, ArrayList> ids = new HashMap();
     }
 
-     private static void manifestMerge(Map<String, SectionData> context, DocHubIndexData data, VirtualFile source) {
+    private static void manifestMerge(Map<String, SectionData> context, DocHubIndexData data, VirtualFile source) {
         for (String sectionKey : data.keySet()) {
 
             if (sectionKey.equals("imports")) continue;
@@ -75,29 +86,63 @@ public class CacheBuilder {
         }
     }
 
+    private static Optional<PsiFile> getPsiFile(VirtualFile vFile, Project project) {
+
+        return Optional.ofNullable(vFile)
+                .map(e -> PsiManager
+                        .getInstance(project)
+                        .findFile(e));
+    }
+
+    private static Map<Integer, DocHubIndexData> getFileData(PsiFile psi, Project project, Map<String, SectionData> context) {
+
+        return FileBasedIndex
+                .getInstance()
+                .getFileData(DocHubIndex.INDEX_ID, psi.getVirtualFile(), project);
+    }
+
+
     private static void parseYamlManifest(Project project, String path, Map<String, SectionData> context) {
+
         VirtualFile vFile = VirtualFileSystemUtils.findFile(path, project);
 
-        if (vFile != null) {
-            PsiFile targetFile = PsiManager.getInstance(project).findFile(vFile);
-            if (targetFile != null) {
-                Map index = FileBasedIndex.getInstance().getFileData(DocHubIndex.INDEX_ID, vFile, project);
+        Queue<String> queue = new LinkedList<>();
+        List<String> done = new ArrayList<>();
 
-                for (Object key : index.keySet()) {
-                    DocHubIndexData data = (DocHubIndexData) index.get(key);
+        while (vFile != null) {
+
+            Optional<PsiFile> psiFile = getPsiFile(vFile, project);
+
+            if (psiFile.isPresent()) {
+
+                Map<Integer, DocHubIndexData> index = getFileData(psiFile.get(), project, context);
+
+                for (Integer key : index.keySet()) {
+                    DocHubIndexData data = index.get(key);
 
                     DocHubIndexData.Section imports = data.get("imports");
+
                     if (imports != null) {
-                        for (int i = 0; i < imports.imports.size(); i ++) {
-                            String importPath =
-                                    (vFile.getParent().getPath() + "/" + imports.imports.get(i))
-                                            .substring(project.getBasePath().length());
-                            parseYamlManifest(project, importPath, context);
-                        }
+
+                        VirtualFile finalVFile = vFile;
+                        List<String> list = imports.imports
+                                .stream()
+                                .map(anImport -> (finalVFile.getParent().getPath() + "/" + anImport).substring(Objects.requireNonNull(project.getBasePath()).length()))
+                                .toList();
+
+                        list.forEach(queue::offer);
                     }
 
                     manifestMerge(context, data, vFile);
                 }
+
+                String importPath = queue.poll();
+
+                while (done.contains(importPath)) {
+                    importPath = queue.poll();
+                }
+                done.add(importPath);
+                vFile = importPath != null ? VirtualFileSystemUtils.findFile(importPath, project) : null;
             }
         }
     }
@@ -107,8 +152,9 @@ public class CacheBuilder {
         for (String name : names) {
             if (isFileExists(project, name)) {
                 Map<String, String> env = parseEnvFile(project.getBasePath() + "/" + name);
-                return  "public/" + env.get("VUE_APP_DOCHUB_ROOT_MANIFEST");
-            };
+                return "public/" + env.get("VUE_APP_DOCHUB_ROOT_MANIFEST");
+            }
+            ;
         }
         return null;
     }
