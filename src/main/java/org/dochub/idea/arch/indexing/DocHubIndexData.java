@@ -5,20 +5,27 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public final class DocHubIndexData extends HashMap<String, DocHubIndexData.Section> {
 
     public class Section {
-        public ArrayList<String> locations = new ArrayList();
-        public ArrayList<String> ids = new ArrayList();
+        public List<String> locations = new ArrayList<>();
+        public List<String> ids = new ArrayList<>();
         public List<String> imports = new ArrayList<>();
+
         public boolean isEmpty() {
             return (locations.size() + ids.size() + imports.size()) == 0;
         }
@@ -110,8 +117,15 @@ public final class DocHubIndexData extends HashMap<String, DocHubIndexData.Secti
     }
 
     public void makeCacheDataImports(Map<String, Object> yaml) {
-        ArrayList<String> result = (ArrayList<String>) yaml.get("imports");
-        if ((result != null) && (result.size() > 0)) {
+        List<String> imports = (List<String>) yaml.get("imports");
+
+        List<String> result = Optional.ofNullable(imports)
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(e -> e != null && !e.isEmpty())
+                .toList();
+
+        if (!result.isEmpty()) {
             Section section = new Section();
             section.imports = result;
             this.put("imports", section);
@@ -123,27 +137,28 @@ public final class DocHubIndexData extends HashMap<String, DocHubIndexData.Secti
         try {
             Map<String, Object> keys = (Map<String, Object>) yaml.get(section);
             if (keys != null) {
-                for ( String id : keys.keySet()) {
+                for (String id : keys.keySet()) {
                     secData.ids.add(id);
                     Object object = yaml.get(id);
                     if (object instanceof Map) {
                         Object location = ((Map) object).get("location");
                         if (location instanceof String) {
-                            if (location != null) secData.locations.add((String) location);
+                            secData.locations.add((String) location);
                         }
                     }
                 }
             }
-            if ((secData.locations.size()) > 0 || (secData.ids.size() > 0) )
+            if ((secData.locations.size()) > 0 || (secData.ids.size() > 0))
                 this.put(section, secData);
-        } catch (ClassCastException e) {}
+        } catch (ClassCastException e) {
+        }
     }
 
     public void makeCacheDataManifest(PsiFile file) {
         VirtualFile vFile = file.getVirtualFile();
         if (vFile != null) {
             String path = vFile.getPath();
-            try(InputStream inputStream = new FileInputStream(path)) {
+            try (InputStream inputStream = new FileInputStream(path)) {
                 Yaml yaml = new Yaml();
                 Map<String, Object> sections = yaml.load(inputStream);
                 if (sections != null) {
@@ -154,7 +169,8 @@ public final class DocHubIndexData extends HashMap<String, DocHubIndexData.Secti
                     makeCacheDataSection(sections, "docs");
                     makeCacheDataSection(sections, "datasets");
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 
