@@ -9,6 +9,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -17,7 +18,7 @@ public final class DocHubIndexData extends HashMap<String, DocHubIndexData.Secti
     public class Section {
         public ArrayList<String> locations = new ArrayList();
         public ArrayList<String> ids = new ArrayList();
-        public ArrayList<String> imports = new ArrayList<>();
+        public List<String> imports = new ArrayList<>();
         public boolean isEmpty() {
             return (locations.size() + ids.size() + imports.size()) == 0;
         }
