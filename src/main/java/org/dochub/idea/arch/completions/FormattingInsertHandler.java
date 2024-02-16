@@ -9,8 +9,11 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.util.text.CharArrayUtil;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
+import static org.apache.commons.lang3.StringUtils.repeat;
 
 public class FormattingInsertHandler implements InsertHandler {
     private final CompletionKey key;
@@ -44,7 +47,7 @@ public class FormattingInsertHandler implements InsertHandler {
         TabOutScopesTracker.getInstance().registerEmptyScopeAtCaret(context.getEditor());
         editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
         editor.getSelectionModel().removeSelection();
-        AutoPopupController.getInstance(editor.getProject()).scheduleAutoPopup(editor);
+        AutoPopupController.getInstance(Objects.requireNonNull(editor.getProject())).scheduleAutoPopup(editor);
     }
 
     private String getCharsToInsert() {
@@ -52,11 +55,11 @@ public class FormattingInsertHandler implements InsertHandler {
         switch (key.getValueType()) {
             case MAP:
                 result.append("\n")
-                        .append(StringUtils.repeat(" ", (documentLevel + 1) * 2));
+                        .append(repeat(" ", (documentLevel + 1) * 2));
                 break;
             case LIST:
                 result.append("\n")
-                        .append(StringUtils.repeat(" ", (documentLevel + 1) * 2))
+                        .append(repeat(" ", (documentLevel + 1) * 2))
                         .append("- ");
                 break;
             default:

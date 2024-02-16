@@ -35,9 +35,6 @@ public class EntityManager {
             LocalFileSystem fs = LocalFileSystem.getInstance();
             currentSchema = fs.findFileByPath(file.getAbsolutePath());
 
-            VirtualFileManager.getInstance().refreshAndFindFileByNioPath(file.toPath());
-
-
             schemas.put(projectHash, currentSchema);
 
             Runnable dropCaches = () -> {
