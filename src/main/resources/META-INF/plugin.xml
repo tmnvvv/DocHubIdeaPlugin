@@ -102,8 +102,6 @@
 
         <fileBasedIndex implementation="org.dochub.idea.arch.indexing.DocHubIndex"/>
 
-<!--        <stubIndex implementation=" index.stubs.org.dochub.idea.arch.JSONataMethodNameIndex"/>-->
-
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
