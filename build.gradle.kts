@@ -73,11 +73,11 @@ tasks.jar {
 }
 
 val generateJSONataLexer =  tasks.register<GenerateLexerTask>("genJSONataLexer") {
+
     description = "Generated Jsonata lexer"
     group = "build setup"
-    source.set(flexPath)
-    targetDir.set(genLexerPath)
-    targetClass.set(genLexerClassName)
+    sourceFile.set(File(flexPath))
+    targetOutputDir.set(File(genLexerPath))
     purgeOldFiles.set(genLexerPurgeOldFiles.toBoolean())
 }
 
@@ -85,14 +85,15 @@ val generateJSONataParser = tasks.register<GenerateParserTask>("genJSONataParser
     dependsOn(generateJSONataLexer)
     description = "Generated Jsonata parser"
     group = "build setup"
-    source.set(bnfPath)
-    targetRoot.set(genPath)
+
     pathToParser.set(genParserClassPath)
     pathToPsiRoot.set(genPsiPath)
     purgeOldFiles.set(genParserPurgeOldFiles.toBoolean())
 
-    parserFile.set(project.file(genParserClassPath))
-    psiDir.set(project.file(genPath))
+    sourceFile.set(File(bnfPath))
+    targetRootOutputDir.set(File(genPath))
+    pathToParser.set(genParserClassPath)
+    pathToPsiRoot.set(genPsiPath)
     sourceFile.set(project.file(bnfPath))
     targetRootOutputDir.set(project.file(genPath))
 }
