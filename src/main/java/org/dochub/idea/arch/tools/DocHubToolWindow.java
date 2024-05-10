@@ -71,6 +71,15 @@ public class DocHubToolWindow extends JBCefBrowser {
       }
     }
   }
+
+  private String getDirectFilePathOfURL(String url) {
+    String basePath = project.getBasePath() + "/";
+    String parentPath = (new File(CacheBuilder.getRootManifestName(project))).getParent();
+    return basePath
+            + (parentPath != null ? parentPath + "/" : "")
+            + url.substring(20).split("\\?")[0];
+  }
+
   private JBCefJSQuery.Response requestProcessing(String json) {
     // openDevtools();
     StringBuilder result = new StringBuilder();
@@ -127,12 +136,7 @@ public class DocHubToolWindow extends JBCefBrowser {
             return new JBCefJSQuery.Response("", 500, "Could not open source " + path + "\nError: " + e.toString());
           }
         } else if ((url.length() > 20) && url.startsWith(Consts.ROOT_SOURCE_PATH)) {
-          String basePath = project.getBasePath() + "/";
-          String parentPath = (new File(CacheBuilder.getRootManifestName(project))).getParent();
-          String sourcePath =
-                  basePath
-                          + (parentPath != null ? parentPath + "/" : "")
-                          + url.substring(20).split("\\?")[0];
+          String sourcePath = getDirectFilePathOfURL(url);
           File file = new File(sourcePath);
           if (!file.exists() || file.isDirectory()) {
             return new JBCefJSQuery.Response("", 404, "No found: " + url);
@@ -165,6 +169,13 @@ public class DocHubToolWindow extends JBCefBrowser {
                     jsonDescription != null ? jsonDescription.asText() : "",
                     jsonExtension != null ? jsonExtension.asText(): ""
             );
+          }
+        } else if (url.equals(Consts.ACTION_PUSH_FILE)) { // Сохранение файлов из WEB морды
+          JsonNode jsonContent = jsonObj.get("content");
+          JsonNode jsonSource = jsonObj.get("source");
+          if (jsonContent != null && jsonSource != null) {
+            String sourcePath = getDirectFilePathOfURL(jsonSource.asText());
+            Code.pushFile(sourcePath, jsonContent.asText());
           }
         } else if (url.equals(Consts.DEVTOOL_SHOW_URI)){
           openDevtools();

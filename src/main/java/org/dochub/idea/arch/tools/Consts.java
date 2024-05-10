@@ -26,4 +26,6 @@ public class Consts {
 
     public static final String GET_SETTINGS = "plugin:/idea/settings/get";
 
+    public static final String ACTION_PUSH_FILE = "plugin:/idea/code/push/file";
+
 }
