@@ -175,7 +175,7 @@ public class DocHubToolWindow extends JBCefBrowser {
           JsonNode jsonSource = jsonObj.get("source");
           if (jsonContent != null && jsonSource != null) {
             String sourcePath = getDirectFilePathOfURL(jsonSource.asText());
-            Code.pushFile(sourcePath, jsonContent.asText());
+            Code.pushFile(project, sourcePath, jsonContent.asText());
           }
         } else if (url.equals(Consts.DEVTOOL_SHOW_URI)){
           openDevtools();

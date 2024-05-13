@@ -1,12 +1,9 @@
 package org.dochub.idea.arch.tools;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
-import com.intellij.openapi.fileChooser.FileSaverDescriptor;
-import com.intellij.openapi.fileChooser.FileSaverDialog;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileWrapper;
+import com.intellij.openapi.vfs.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Code {
-    static public void pushFile(String path, String content) {
+    static public void pushFile(Project project, String path, String content) {
         Timer timer = new Timer("Push file");
         timer.schedule(new TimerTask() {
             public void run() {
@@ -33,6 +30,21 @@ public class Code {
 
                         try{
                             Files.write(Path.of(path), payload);
+                            LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(path));
+                            VirtualFileUtil.refreshAndFindVirtualFile(Path.of(path));
+                            VirtualFileManager.getInstance().asyncRefresh(new Runnable() {
+                                @Override
+                                public void run() {
+                                    String newFilePath = "path/to/file";
+                                    VirtualFile newFile = LocalFileSystem.getInstance().findFileByPath(newFilePath);
+                                    if (newFile == null) {
+                                        throw new RuntimeException("Could not find newly created file!");
+                                    } else {
+                                        // Open the file in the editor.
+                                        new OpenFileDescriptor(project, newFile).navigate(false);
+                                    }
+                                }
+                            });
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
