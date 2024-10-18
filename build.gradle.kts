@@ -6,7 +6,7 @@ plugins {
     id("java")
     id("idea")
     id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.intellij")
+    id("org.jetbrains.intellij.platform")
     id("org.jetbrains.grammarkit")
 }
 
@@ -32,9 +32,19 @@ val elkVersion: String by project
 
 repositories {
     mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
+
+    intellijPlatform {
+        intellijIdeaCommunity(platformVersion)
+        bundledPlugins(platformPlugins.split(',').map(String::trim).filter(String::isNotEmpty))
+        instrumentationTools()
+    }
 
     /**
      * Базовые зависимости
@@ -44,19 +54,12 @@ dependencies {
     implementation("org.eclipse.elk:org.eclipse.elk.alg.layered:$elkVersion")
     implementation("org.eclipse.elk:org.eclipse.elk.core:$elkVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-    implementation("org.javassist:javassist:3.29.2-GA")
 
     /**
      * Тестовые зависимости
      */
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-}
-
-intellij {
-    version.set(platformVersion)
-    type.set(platformType)
-    plugins.set(platformPlugins.split(',').map(String::trim).filter(String::isNotEmpty))
 }
 
 
@@ -105,14 +108,14 @@ tasks {
     }
 
     withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+        sourceCompatibility = "21"
+        targetCompatibility = "21"
         options.encoding = "UTF-8"
         dependsOn(generateJSONataParser)
     }
 
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = "21"
         dependsOn(generateJSONataParser)
     }
 

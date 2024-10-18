@@ -1,11 +1,7 @@
 pluginManagement {
 
     repositories {
-        repositories {
-            maven {
-                url = uri("https://plugins.gradle.org/m2/")
-            }
-        }
+        gradlePluginPortal()
     }
 
     val kotlinVersion: String by settings
@@ -14,7 +10,7 @@ pluginManagement {
 
     plugins {
         id("org.jetbrains.kotlin.jvm") version kotlinVersion
-        id("org.jetbrains.intellij") version gradleIntellijPluginVersion
+        id("org.jetbrains.intellij.platform") version gradleIntellijPluginVersion
         id("org.jetbrains.grammarkit") version grammarKitVersion
     }
 }
